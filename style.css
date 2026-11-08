@@ -22,3 +22,5 @@ main>.section,main>#practice,main>.final-cta{background:#e8eddf;color:var(--ink)
 .hero,.portrait{background:#e3eacb}
 /* Warm tan outside the boxes; retain the pale-green service cards. */
 body{background:#e8dfcd}main>.section,main>#practice,main>.final-cta,.hero,#services,#kanji,#practice,#anime,#meet{background:#e8dfcd}#services .service-card,#services #service-kanji{background:#e3eacb}
+/* Pale yellow sampled from the supplied colour reference. */
+body,main>.section,main>#practice,main>.final-cta,.hero,#services,#kanji,#practice,#anime,#meet{background:#f9f9cd}
