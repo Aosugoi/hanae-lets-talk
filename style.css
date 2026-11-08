@@ -18,3 +18,5 @@
 main>.section,main>#practice,main>.final-cta{background:#e8eddf;color:var(--ink)}#services,#kanji,#practice,#anime,#meet{background:#e8eddf}#services .service-card,#services #service-kanji,.format-grid article,.kanji-info>div,.kanji-challenge,#anime .anime-note,#anime .order-output{background:var(--cream)}#services #service-kanji{border-color:var(--line)}#practice p{color:var(--muted)}#practice .tabs button{background:var(--cream);color:var(--ink);border-color:#839b74}#practice .tabs button.active{background:var(--green);color:white;border-color:var(--green)}#practice .audio-player .listen-button{background:var(--green);color:white}#practice .audio-player .listen-button.is-playing{background:var(--lime);color:var(--ink)}#anime{border-radius:0;max-width:1400px;margin:0 auto}#meet .about-tags span{background:var(--cream)}main>.section+section{border-top:1px solid var(--line)}
 /* All four numbered service cards match the original highlighted kanji card. */
 #services .service-card,#services #service-kanji{background:#e3eacb;border:1px solid #8eaa62}
+/* Carry the service-card green into the photo and introduction area. */
+.hero,.portrait{background:#e3eacb}
