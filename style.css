@@ -29,3 +29,18 @@ button,.audio-player .listen-button{background:var(--gold);color:#29271f;border:
 
 .hero-panel{background:var(--lime);border-radius:8px;padding:clamp(18px,3vw,36px)}
 .hero-panel .actions{margin-bottom:0}
+
+/* Wada gallery theme 17: Naples Yellow and Rose. */
+:root{--cream:#f6f3e9;--paper:#f6f3e9;--ink:#282420;--muted:#504943;--green:#F27291;--lime:#FBE6A0;--on-accent:#000;--on-panel:#000;--line:#c6bdb2;--warm:color-mix(in srgb,var(--lime) 25%,var(--cream));--butter:var(--warm);--gold:var(--green)}
+.hero-panel,.portrait .hello,.ribbon,.final-cta{background:var(--lime);color:var(--on-panel)}
+.hero-panel>p,.hero-panel .lead,.hero-panel .eyebrow,.hero-panel h1 em,.final-cta p,.final-cta .eyebrow{color:inherit}
+.services,.kanji-section,#anime,.about,.format-grid article,#result,#kanji-booking-note,#trial-booking-note{background:var(--warm)}
+#services .service-card,#services #service-kanji,.anime-note{border-top-color:var(--green)}
+.preview,.practice,.practice>div>p,.practice .eyebrow,.practice .tabs button{color:var(--on-accent)}
+.practice .tabs button{border-color:currentColor}
+.practice .tabs button.active,.audio-player .listen-button.is-playing,.audio-player .slow-button[aria-pressed=true],.quiz-options button.correct{background:var(--lime);color:var(--on-panel);border-color:var(--lime)}
+button,.audio-player .listen-button,.language-switch button[aria-pressed=true],.menu-toggle[aria-expanded=true],.kanji-characters button[aria-pressed=true],.choice-row button[aria-pressed=true],.actions .trial-link,.back-top{color:var(--on-accent)}
+.choice-row button[aria-pressed=true] .favourite-badge{color:inherit}
+header a[aria-current=location]{color:var(--ink);text-decoration:underline}
+.language-switch,.menu-toggle,.kanji-characters button,.choice-row button,.quiz-options button,.audio-player .slow-button{border-color:var(--line)}
+.back-top,.actions .trial-link,button[data-meet]{box-shadow:inset 0 0 0 1px #0003}
