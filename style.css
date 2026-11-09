@@ -24,3 +24,5 @@ button,.audio-player .listen-button{background:var(--gold);color:#29271f;border:
 
 .actions .trial-link{background:var(--green);color:#fff;border:0;border-radius:5px;font-size:14px;font-weight:600;padding:15px 22px;min-height:44px;text-decoration:none}
 .actions .trial-link:hover{filter:brightness(1.08)}
+
+#service-everyday > button{margin:12px 0 18px}
