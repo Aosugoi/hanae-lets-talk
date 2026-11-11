@@ -58,3 +58,34 @@ header a[aria-current=location]{color:var(--ink);text-decoration:underline}
 @media(max-width:360px){
   .brand .brand-ja{font-size:21px}
 }
+
+.header-social {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.header-social a {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  color: var(--ink);
+}
+
+.header-social a:hover {
+  background: var(--warm);
+}
+
+.header-social svg {
+  width: 20px;
+  height: 20px;
+}
+
+@media (max-width: 1050px) {
+  header > nav {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+}
