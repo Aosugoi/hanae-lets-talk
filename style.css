@@ -44,3 +44,17 @@ button,.audio-player .listen-button,.language-switch button[aria-pressed=true],.
 header a[aria-current=location]{color:var(--ink);text-decoration:underline}
 .language-switch,.menu-toggle,.kanji-characters button,.choice-row button,.quiz-options button,.audio-player .slow-button{border-color:var(--line)}
 .back-top,.actions .trial-link,button[data-meet]{box-shadow:inset 0 0 0 1px #0003}
+
+/* Bilingual wordmark in the header and footer. */
+.brand{display:block;flex-shrink:1;min-width:0;letter-spacing:0;line-height:1.2}
+.brand .brand-ja{font-family:'Noto Serif JP',serif;font-size:25px;line-height:1.4;letter-spacing:0;margin:0;white-space:nowrap}
+.brand .brand-en{font-family:'DM Sans',sans-serif;font-size:14px;line-height:1.5;letter-spacing:.3px;margin:3px 0 0}
+@media(max-width:1050px){
+  header>.brand{flex-basis:100%}
+  header>nav{margin-left:auto}
+  .brand .brand-ja{font-size:23px}
+  html{scroll-padding-top:175px}
+}
+@media(max-width:360px){
+  .brand .brand-ja{font-size:21px}
+}
