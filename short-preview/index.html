@@ -2,7 +2,50 @@
 <p class="eyebrow" data-i18n="heroEyebrow">Online Japanese for adult beginners</p>
 <h1 data-i18n="heroTitle">Your first conversations<br>in <em>Japanese.</em></h1>
 <p class="lead" data-i18n="newIntro">Three 30-minute online lessons for adult beginners. Practise one everyday conversation with Hanae, with English support when you need it.</p>
-<div class="actions"><button data-meet data-goal="Beginner trial" data-mode="Online" data-i18n="newTrial">Preview the trial ↗</button></div>
+<div class="actions"><button data-meet data-goal="Beginner trial" data-mode="Online" data-i18n="newTrial">Preview the trial ↗</button> <a id="request-link" href="#lesson-request">Request a lesson ↓</a></div>
 <p class="hero-meta" data-i18n="trialAvailability">Monday–Friday · Exact times and price to be confirmed</p>
 <details><summary data-i18n="newDetails">How the trial works</summary><p data-i18n="newSteps">Pick a real-life situation, practise it together, then try the conversation on your own with feedback.</p></details>
-</div></div><div class="portrait"><img src="../assets/hanae-portrait.jpg" width="750" height="1000" fetchpriority="high" decoding="async" alt="Hanae smiling on a beach at sunset"><span data-i18n="photoLabel" class="photo-label">Your Japanese starts<br>with a friendly face.</span><div class="hello">はじめまして！<small data-i18n="nice" >Nice to meet you.</small></div></div></section></main><footer><a class="brand" href="index.html" aria-label="ハナエと話しましょう — Hanae, let’s talk"><span class="brand-ja" lang="ja">ハナエと話しましょう</span><span class="brand-en" lang="en">— Hanae, let’s talk</span></a><p data-i18n="footerBody" >Japanese for real life. Online & in Fukuoka.</p><p><a href="https://www.instagram.com/hanaeletstalk/" target="_blank" rel="noopener noreferrer">Instagram ↗</a> · <a href="https://www.tiktok.com/@hanaeletstalk" target="_blank" rel="noopener noreferrer">TikTok ↗</a> · <a href="https://www.facebook.com/profile.php?id=61596670970860" target="_blank" rel="noopener noreferrer">Facebook ↗</a></p><span data-i18n="footerNote" >Concept preview · Made for Hanae</span></footer><dialog id="booking"><button id="close" aria-label="Close / 閉じる">×</button><div data-i18n="bookingEy" class="eyebrow">A FIRST HELLO</div><h2 data-i18n="bookingTitle" >Meet Hanae.</h2><p data-i18n="bookingBody" >This is a preview of the introduction flow. No booking or message will be sent.</p><form id="intro"><label><span data-i18n="modeLabel">How would you like to meet?</span><select id="mode"><option value="Online" data-i18n="online">Online</option><option value="In Fukuoka" data-i18n="fukuoka">In Fukuoka</option></select></label><label><span data-i18n="goalLabel">What brings you here?</span><select id="goal"><option value="Beginner trial" data-i18n="goalTrial">Three-lesson beginner trial</option><option value="Everyday life in Japan" data-i18n="goal0">Everyday life in Japan</option><option value="Japanese as a parent" data-i18n="goal1">Japanese as a parent</option><option value="Kanji &amp; stories for my child" data-i18n="goal2">Kanji &amp; stories for my child</option><option value="A trip to Japan" data-i18n="goal3">A trip to Japan</option><option value="Anime &amp; fan conversations" data-i18n="goal4">Anime &amp; fan conversations</option><option value="Something else" data-i18n="goal5">Something else</option></select></label><p data-i18n="trialBooking" id="trial-booking-note" hidden>Three 30-minute online lessons, Monday to Friday. Exact times (JST) and price to be confirmed.</p><p data-i18n="kanjiBooking" id="kanji-booking-note" hidden>Children’s kanji: 3–6 p.m. Japan time. Days and session arrangements to be confirmed.</p><button type="submit"><span data-i18n="submit">Preview my introduction ↗</span></button></form><div id="result" hidden role="status"></div><small data-i18n="bookingNote" >Bookings will open after Hanae confirms the details and availability.</small></dialog><script src="app.js"></script></body></html>
+</div></div><div class="portrait"><img src="../assets/hanae-portrait.jpg" width="750" height="1000" fetchpriority="high" decoding="async" alt="Hanae smiling on a beach at sunset"><span data-i18n="photoLabel" class="photo-label">Your Japanese starts<br>with a friendly face.</span><div class="hello">はじめまして！<small data-i18n="nice" >Nice to meet you.</small></div></div></section><section class="section" id="lesson-request" style="max-width:760px;margin:auto">
+<h2 id="request-title">Request a lesson</h2>
+<p id="request-note">Open an email draft with your details, then send it to Hanae. She’ll reply to confirm availability and pricing.</p>
+<form id="request-form">
+<p><label><span id="request-name">Name</span><br><input name="name" autocomplete="name" required maxlength="100"></label></p>
+<p><label><span id="request-email">Email</span><br><input name="email" type="email" autocomplete="email" required maxlength="254"></label></p>
+<p><label><span id="request-lesson">Lesson</span><br><select name="lesson"><option value="Three-lesson beginner trial" id="request-trial">Three-lesson beginner trial</option><option value="Another lesson" id="request-other">Another lesson</option></select></label></p>
+<p><label><span id="request-zone">Time zone</span><br><input name="timezone" required maxlength="80"></label></p>
+<p><label><span id="request-times">Preferred weekday times</span><br><textarea name="times" required maxlength="400" rows="3"></textarea></label></p>
+<button id="request-open">Open email draft ↗</button>
+</form></section></main><footer><a class="brand" href="index.html" aria-label="ハナエと話しましょう — Hanae, let’s talk"><span class="brand-ja" lang="ja">ハナエと話しましょう</span><span class="brand-en" lang="en">— Hanae, let’s talk</span></a><p data-i18n="footerBody" >Japanese for real life. Online & in Fukuoka.</p><div class="header-social">
+  <a href="https://www.instagram.com/hanaeletstalk/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+  </a>
+  <a href="https://www.tiktok.com/@hanaeletstalk" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M16 3h-3v12.3a2.8 2.8 0 1 1-2.8-2.8h.8v-3h-.8a5.8 5.8 0 1 0 5.8 5.8V8.7a7.2 7.2 0 0 0 4 1.3V7a4 4 0 0 1-4-4Z"/></svg>
+  </a>
+  <a href="https://www.facebook.com/profile.php?id=61596670970860" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M14 21v-8h2.7l.4-3H14V8c0-.9.3-1.5 1.6-1.5h1.7V3.8c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.3v2H8v3h2.6v8H14Z"/></svg>
+  </a>
+</div><span data-i18n="footerNote" >Concept preview · Made for Hanae</span></footer><dialog id="booking"><button id="close" aria-label="Close / 閉じる">×</button><div data-i18n="bookingEy" class="eyebrow">A FIRST HELLO</div><h2 data-i18n="bookingTitle" >Meet Hanae.</h2><p data-i18n="bookingBody" >This is a preview of the introduction flow. No booking or message will be sent.</p><form id="intro"><label><span data-i18n="modeLabel">How would you like to meet?</span><select id="mode"><option value="Online" data-i18n="online">Online</option><option value="In Fukuoka" data-i18n="fukuoka">In Fukuoka</option></select></label><label><span data-i18n="goalLabel">What brings you here?</span><select id="goal"><option value="Beginner trial" data-i18n="goalTrial">Three-lesson beginner trial</option><option value="Everyday life in Japan" data-i18n="goal0">Everyday life in Japan</option><option value="Japanese as a parent" data-i18n="goal1">Japanese as a parent</option><option value="Kanji &amp; stories for my child" data-i18n="goal2">Kanji &amp; stories for my child</option><option value="A trip to Japan" data-i18n="goal3">A trip to Japan</option><option value="Anime &amp; fan conversations" data-i18n="goal4">Anime &amp; fan conversations</option><option value="Something else" data-i18n="goal5">Something else</option></select></label><p data-i18n="trialBooking" id="trial-booking-note" hidden>Three 30-minute online lessons, Monday to Friday. Exact times (JST) and price to be confirmed.</p><p data-i18n="kanjiBooking" id="kanji-booking-note" hidden>Children’s kanji: 3–6 p.m. Japan time. Days and session arrangements to be confirmed.</p><button type="submit"><span data-i18n="submit">Preview my introduction ↗</span></button></form><div id="result" hidden role="status"></div><small data-i18n="bookingNote" >Bookings will open after Hanae confirms the details and availability.</small></dialog><script src="app.js"></script><script>
+const requestLabels={
+ 'request-title':'レッスンを申し込む',
+ 'request-note':'入力内容をメールの下書きにまとめます。メールを送信すると、ハナエが日程と料金について返信します。',
+ 'request-name':'お名前','request-email':'メールアドレス','request-lesson':'希望のレッスン',
+ 'request-trial':'初心者向け体験レッスン（全3回）','request-other':'その他のレッスン',
+ 'request-zone':'タイムゾーン','request-times':'平日の希望時間帯','request-open':'メールの下書きを開く ↗','request-link':'レッスンを申し込む ↓'
+};
+const requestEnglish=Object.fromEntries(Object.keys(requestLabels).map(id=>[id,document.getElementById(id).textContent]));
+function updateRequestLanguage(){
+ const labels=document.documentElement.lang==='ja'?requestLabels:requestEnglish;
+ for(const [id,label] of Object.entries(labels))document.getElementById(id).textContent=label;
+}
+new MutationObserver(updateRequestLanguage).observe(document.documentElement,{attributes:true,attributeFilter:['lang']});
+updateRequestLanguage();
+const requestForm=document.getElementById('request-form');
+requestForm.elements.timezone.value=Intl.DateTimeFormat().resolvedOptions().timeZone||'';
+requestForm.addEventListener('submit',event=>{
+ event.preventDefault();
+ const data=new FormData(requestForm);
+ const body=['Name: '+data.get('name'),'Email: '+data.get('email'),'Lesson: '+data.get('lesson'),'Time zone: '+data.get('timezone'),'Preferred weekday times: '+data.get('times'),'Source: Short website'].join('\n');
+ location.href='mailto:hanaeletstalk@gmail.com?subject='+encodeURIComponent('Hanae lesson request')+'&body='+encodeURIComponent(body);
+});
+</script></body></html>
