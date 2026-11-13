@@ -15,7 +15,7 @@
   <a href="https://www.facebook.com/profile.php?id=61596670970860" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
     <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M14 21v-8h2.7l.4-3H14V8c0-.9.3-1.5 1.6-1.5h1.7V3.8c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.3v2H8v3h2.6v8H14Z"/></svg>
   </a>
-</div><span data-i18n="footerNote" >Concept preview · Made for Hanae</span></footer><dialog id="booking" aria-labelledby="request-title"><button id="close" aria-label="Close / 閉じる">×</button><h2 id="request-title" data-request-ja="レッスンを申し込む">Request a lesson</h2><p data-request-ja="日程と料金についてハナエからメールでご連絡します。送信結果は新しいタブに表示されます。">Hanae will email you to confirm availability and pricing. Your receipt opens in a new tab.</p><div id="intro"><form id="request-form" method="post" target="_blank" rel="noopener" action="https://docs.google.com/forms/d/e/1FAIpQLSckTiIKL6pwCHeR7UictinilkDxiz8F6eCDY5FFqrduzU5HEg/formResponse"><label><span data-i18n="modeLabel">How would you like to meet?</span><select id="mode"><option value="Online" data-i18n="online">Online</option><option value="In Fukuoka" data-i18n="fukuoka">In Fukuoka</option></select></label><label><span data-i18n="goalLabel">What brings you here?</span><select id="goal"><option value="Beginner trial" data-i18n="goalTrial">Three-lesson beginner trial</option><option value="Everyday life in Japan" data-i18n="goal0">Everyday life in Japan</option><option value="Japanese as a parent" data-i18n="goal1">Japanese as a parent</option><option value="Kanji &amp; stories for my child" data-i18n="goal2">Kanji &amp; stories for my child</option><option value="A trip to Japan" data-i18n="goal3">A trip to Japan</option><option value="Anime &amp; fan conversations" data-i18n="goal4">Anime &amp; fan conversations</option><option value="Something else" data-i18n="goal5">Something else</option></select></label><p data-i18n="trialBooking" id="trial-booking-note" hidden>Three 30-minute online lessons, Monday to Friday. Exact times (JST) and price to be confirmed.</p><p data-i18n="kanjiBooking" id="kanji-booking-note" hidden>Children’s kanji: 3–6 p.m. Japan time. Days and session arrangements to be confirmed.</p>
+</div><span data-i18n="footerNote" >Concept preview · Made for Hanae</span></footer><dialog id="booking" aria-labelledby="request-title"><button id="close" aria-label="Close / 閉じる">×</button><h2 id="request-title" data-request-ja="レッスンを申し込む">Request a lesson</h2><p data-request-ja="日程と料金についてハナエからメールでご連絡します。">Hanae will email you to confirm availability and pricing.</p><div id="intro"><form id="request-form" method="post" target="lesson-receipt-frame" action="https://docs.google.com/forms/d/e/1FAIpQLSckTiIKL6pwCHeR7UictinilkDxiz8F6eCDY5FFqrduzU5HEg/formResponse"><label><span data-i18n="modeLabel">How would you like to meet?</span><select id="mode"><option value="Online" data-i18n="online">Online</option><option value="In Fukuoka" data-i18n="fukuoka">In Fukuoka</option></select></label><label><span data-i18n="goalLabel">What brings you here?</span><select id="goal"><option value="Beginner trial" data-i18n="goalTrial">Three-lesson beginner trial</option><option value="Everyday life in Japan" data-i18n="goal0">Everyday life in Japan</option><option value="Japanese as a parent" data-i18n="goal1">Japanese as a parent</option><option value="Kanji &amp; stories for my child" data-i18n="goal2">Kanji &amp; stories for my child</option><option value="A trip to Japan" data-i18n="goal3">A trip to Japan</option><option value="Anime &amp; fan conversations" data-i18n="goal4">Anime &amp; fan conversations</option><option value="Something else" data-i18n="goal5">Something else</option></select></label><p data-i18n="trialBooking" id="trial-booking-note" hidden>Three 30-minute online lessons, Monday to Friday. Exact times (JST) and price to be confirmed.</p><p data-i18n="kanjiBooking" id="kanji-booking-note" hidden>Children’s kanji: 3–6 p.m. Japan time. Days and session arrangements to be confirmed.</p>
 <label><span data-request-ja="お名前">Your name</span><input type="text" name="entry.1528789929" autocomplete="name" maxlength="100" required></label>
 <label><span data-request-ja="メールアドレス">Email address</span><input type="email" name="entry.741062618" autocomplete="email" maxlength="254" required></label>
 <input type="hidden" name="entry.2033060945">
@@ -23,7 +23,7 @@
 <label><span data-request-ja="平日の希望時間帯">Preferred weekday times</span><textarea name="entry.62211884" rows="2" maxlength="400" required></textarea></label>
 <input type="hidden" name="entry.1332846498" value="English">
 <button type="submit" data-request-ja="申し込みを送信 ↗">Send lesson request ↗</button>
-</form></div><div id="result" hidden role="status"></div></dialog><script src="app.js"></script><script>
+</form></div><section id="lesson-receipt" hidden><p role="status" data-request-ja="送信結果を下に表示します。">Check your submission result below.</p><iframe name="lesson-receipt-frame" title="Submission result / 送信結果" style="width:100%;height:280px;border:0"></iframe><button type="button" id="receipt-close" data-request-ja="閉じる">Close</button></section><div id="result" hidden role="status"></div></dialog><script src="app.js"></script><script>
 const requestForm=document.getElementById('request-form');
 const requestLink=document.getElementById('request-link');
 requestLink.dataset.requestJa='レッスンを申し込む ↗';
@@ -42,8 +42,17 @@ function openRequest(event){
 }
 requestLink.classList.add('trial-link');
 requestLink.addEventListener('click',openRequest);
+const receipt=document.getElementById('lesson-receipt');
+document.getElementById('receipt-close').addEventListener('click',()=>dialog.close());
+dialog.addEventListener('close',()=>{receipt.hidden=true});
 requestForm.addEventListener('submit',event=>{
  event.stopPropagation();
+ const destination=new URL(requestForm.action);
+ destination.searchParams.set('hl',document.documentElement.lang);
+ requestForm.action=destination.href;
+ receipt.hidden=false;
+ el('intro').hidden=true;
+ document.getElementById('receipt-close').focus();
  requestForm.elements.namedItem('entry.2033060945').value=el('goal').selectedOptions[0].textContent.trim()+' / '+el('mode').selectedOptions[0].textContent.trim();
 });
 if(['#lesson-request','#booking'].includes(location.hash))openRequest();
