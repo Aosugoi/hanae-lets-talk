@@ -24,7 +24,7 @@
 <label><span data-request-ja="平日の希望時間帯">Preferred weekday times</span><textarea name="entry.62211884" rows="2" maxlength="400" required></textarea></label>
 <input type="hidden" name="entry.1332846498" value="English">
 <button type="submit" data-request-ja="申し込みを送信 ↗">Send lesson request ↗</button>
-</form></div><section id="lesson-receipt" hidden><p role="status" data-request-ja="送信結果を下に表示します。">Check your submission result below.</p><iframe name="lesson-receipt-frame" title="Submission result / 送信結果" style="width:100%;height:280px;border:0"></iframe><button type="button" id="receipt-close" data-request-ja="閉じる">Close</button></section><div id="result" hidden role="status"></div></dialog><script src="app.js"></script><script>
+</form></div><section id="lesson-receipt" hidden><p role="status" data-request-ja="お申し込みの保存を確認しています…">Checking whether your request was saved…</p><iframe hidden name="lesson-receipt-frame" title="Submission result / 送信結果" style="width:100%;height:280px;border:0"></iframe><button type="button" id="receipt-close" data-request-ja="閉じる">Close</button></section><div id="result" hidden role="status"></div></dialog><script src="app.js"></script><script>
 const requestForm=document.getElementById('request-form');
 const requestLink=document.getElementById('request-link');
 requestLink.dataset.requestJa='レッスンを申し込む ↗';
@@ -46,8 +46,47 @@ requestLink.addEventListener('click',openRequest);
 const receipt=document.getElementById('lesson-receipt');
 document.getElementById('receipt-close').addEventListener('click',()=>dialog.close());
 dialog.addEventListener('close',()=>{receipt.hidden=true});
+const receiptStatus = receipt.querySelector('[role=status]');
+const receiptEndpoint = 'https://script.google.com/macros/s/AKfycbyGMCb6ljfqPUZhcKCdnMHdQ9qKaSEgfFxsxdxBLPNWBWWZczlG9pWhmr1mYUOJP77nNA/exec';
+
+async function confirmSavedRequest(id, japanese) {
+ const deadline = Date.now() + 30000;
+ while (Date.now() < deadline) {
+  try {
+   const response = await fetch(receiptEndpoint + '?receipt=' + id, {
+    credentials: 'omit',
+    cache: 'no-store',
+    signal: AbortSignal.timeout(5000),
+   });
+   if (response.ok && (await response.json()).saved === true) {
+    receiptStatus.textContent = japanese
+     ? 'レッスンのお申し込みを受け付けました。日程と料金について、ハナエからメールでご連絡します。'
+     : 'Your lesson request was received. Hanae will email you about availability and pricing.';
+    return;
+   }
+  } catch {
+   // Retry a temporary status lookup failure without resubmitting the form.
+  }
+  await new Promise(resolve => setTimeout(resolve, 1500));
+ }
+ receiptStatus.textContent = japanese
+  ? '保存を確認できませんでした。確認メールが届いているかご確認ください。'
+  : 'We could not verify that your request was saved. Please check your inbox for a confirmation email.';
+}
+
+let checkingReceipt = false;
 requestForm.addEventListener('submit',event=>{
  event.stopPropagation();
+ if (checkingReceipt) {
+  event.preventDefault();
+  return;
+ }
+ const id = crypto.randomUUID();
+ const japanese = document.documentElement.lang === 'ja';
+ requestForm.elements.namedItem('entry.1332846498').value = (japanese ? '日本語' : 'English') + '|' + id;
+ receiptStatus.textContent = japanese ? 'お申し込みの保存を確認しています…' : 'Checking whether your request was saved…';
+ checkingReceipt = true;
+ confirmSavedRequest(id, japanese).finally(() => { checkingReceipt = false; });
  const destination=new URL(requestForm.action);
  destination.searchParams.set('hl',document.documentElement.lang);
  requestForm.action=destination.href;
