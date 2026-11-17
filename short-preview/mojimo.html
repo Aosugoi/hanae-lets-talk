@@ -75,14 +75,35 @@ button{font:inherit;cursor:pointer;border:0}
 .toast.show{transform:translateX(-50%) translateY(0)}
 @keyframes shake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
 @keyframes pop{from{transform:scale(.88);opacity:0}to{transform:scale(1);opacity:1}}
-@media(max-width:390px){body{padding:10px}.panel{padding:19px}.answer{min-height:92px}.brand{margin-bottom:16px}}
+body{flex-direction:column;justify-content:flex-start;padding:clamp(12px,4vw,32px) max(12px,env(safe-area-inset-right)) max(12px,env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left))}
+.display-language{display:flex;justify-content:flex-end;gap:4px;margin-bottom:12px}
+.display-language button{min-height:44px;padding:0 14px;border-radius:999px;background:#fff8e8;color:var(--ink);border:1px solid #d9c89b;font-size:13px;font-weight:800}
+.display-language button[aria-pressed="true"]{background:var(--ink);color:#fff8e8;border-color:var(--ink)}
+.site-return a{display:inline-flex;align-items:center;min-height:44px;color:var(--ink);font-size:14px}
+.feedback{height:auto;min-height:23px}
+.sound,.quit{min-height:44px}
+@media(max-width:480px){
+  .panel{padding:clamp(12px,4vw,20px);border-radius:22px}
+  .brand{margin-bottom:14px}
+  .section-label{margin-top:14px;font-size:12px}
+  .segment,.answers{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .choice{padding:9px 5px;overflow-wrap:anywhere}
+  .choice small{font-size:11px}
+  .stats{margin-bottom:12px}
+  .stat-label,.prompt-label{font-size:11px}
+  .prompt-card{padding:16px 10px}
+  .answer{min-height:78px}
+  .answer .reading{font-size:13px}
+  .start{margin-top:16px;padding:12px}
+  .footer-row{margin-top:6px}
+}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
-<nav aria-label="表示言語 / Display language" style="display:flex;justify-content:center;gap:.5rem;padding:.5rem"><a class="sound" href="?lang=ja" lang="ja">日本語</a><a class="sound" href="?lang=en" lang="en">English</a></nav>
 <div class="toast" id="toast"></div>
 <main class="shell">
+  <nav class="display-language" aria-label="表示言語 / Display language"><button type="button" data-language="ja" lang="ja">日本語</button><button type="button" data-language="en" lang="en">English</button></nav>
   <div class="topline">
     <div class="logo"><span class="logo-mark">文</span><span>MOJIMO ARCADE</span></div>
     <button class="sound" id="soundBtn" aria-label="Toggle sound">♫ SOUND ON</button>
@@ -143,11 +164,26 @@ button{font:inherit;cursor:pointer;border:0}
 <script>
 (() => {
   "use strict";
-  const japanese = new URLSearchParams(location.search).get("lang") !== "en";
+  const languageButtons = [...document.querySelectorAll("[data-language]")];
+  const staticLabels = [...document.querySelectorAll("[data-ja]")].map(element => [element, element.textContent]);
+  const localizedLabels = new Map();
+  let japanese = new URLSearchParams(location.search).get("lang") !== "en";
   const t = (en, ja) => japanese ? ja : en;
-  document.documentElement.lang = t("en", "ja");
-  document.querySelector('nav a[lang="' + document.documentElement.lang + '"]').setAttribute("aria-current", "true");
-  if (japanese) document.querySelectorAll("[data-ja]").forEach(element => { element.textContent = element.dataset.ja; });
+
+  function setLanguage(language){
+    japanese = language === "ja";
+    document.documentElement.lang = language;
+    languageButtons.forEach(button => button.setAttribute("aria-pressed", String(button.dataset.language === language)));
+    staticLabels.forEach(([element, english]) => { element.textContent = t(english, element.dataset.ja); });
+    localizedLabels.forEach((render, element) => { element.textContent = render(); });
+    $("soundBtn").setAttribute("aria-label", t("Toggle sound", "サウンドの切り替え"));
+  }
+  function localizedText(id, render){
+    const element = $(id);
+    localizedLabels.set(element, render);
+    element.textContent = render();
+  }
+
   const words = [
     {en:"water",jp:"水",kana:"みず",level:0},{en:"cat",jp:"猫",kana:"ねこ",level:0},
     {en:"dog",jp:"犬",kana:"いぬ",level:0},{en:"book",jp:"本",kana:"ほん",level:0},
@@ -182,8 +218,7 @@ button{font:inherit;cursor:pointer;border:0}
   const bestKey = () => `${BEST_KEY}_${direction}_${mode}`;
   const readBest = () => { try{return Number(localStorage.getItem(bestKey())||0)}catch(e){return 0} };
   const saveBest = value => { try{localStorage.setItem(bestKey(),String(value))}catch(e){} };
-  $("soundBtn").textContent = t("♫ SOUND ON", "♫ サウンドオン");
-  $("soundBtn").setAttribute("aria-label", t("Toggle sound", "サウンドの切り替え"));
+  localizedText("soundBtn", () => sound ? t("♫ SOUND ON","♫ サウンドオン") : t("♫ SOUND OFF","♫ サウンドオフ"));
   function beep(freq=600,duration=.07,type="sine"){
     if(!sound)return;
     try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return;const c=new C(),o=c.createOscillator(),g=c.createGain();o.type=type;o.frequency.value=freq;g.gain.setValueAtTime(.045,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+duration);o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+duration);o.onended=()=>c.close()}catch(e){}
@@ -191,7 +226,7 @@ button{font:inherit;cursor:pointer;border:0}
   function setChoice(group, attr, value){document.querySelectorAll(`#${group} .choice`).forEach(b=>b.classList.toggle("active",b.dataset[attr]===value))}
   $("directionChoices").addEventListener("click",e=>{const b=e.target.closest("[data-direction]");if(!b)return;direction=b.dataset.direction;setChoice("directionChoices","direction",direction)});
   $("modeChoices").addEventListener("click",e=>{const b=e.target.closest("[data-mode]");if(!b)return;mode=b.dataset.mode;setChoice("modeChoices","mode",mode)});
-  $("soundBtn").addEventListener("click",()=>{sound=!sound;$("soundBtn").textContent=sound?t("♫ SOUND ON","♫ サウンドオン"):t("♫ SOUND OFF","♫ サウンドオフ");if(sound)beep()});
+  $("soundBtn").addEventListener("click",()=>{sound=!sound;localizedText("soundBtn", localizedLabels.get($("soundBtn")));if(sound)beep()});
   function levelFor(n){return n<6?0:n<11?1:n<21?2:3}
   function levelName(n){return [t("STARTER","入門"),t("EVERYDAY","日常"),t("INTERMEDIATE","中級"),t("CHALLENGE","チャレンジ")][levelFor(n)]}
   function pickQuestion(){
@@ -209,21 +244,21 @@ button{font:inherit;cursor:pointer;border:0}
   }
   function renderQuestion(){
     current=pickQuestion();locked=false;
-    $("promptLabel").textContent=direction==="jp"?t("CHOOSE THE JAPANESE","日本語を選んでね"):t("CHOOSE THE ENGLISH","英語を選んでね");
+    localizedText("promptLabel", () => direction==="jp"?t("CHOOSE THE JAPANESE","日本語を選んでね"):t("CHOOSE THE ENGLISH","英語を選んでね"));
     $("prompt").textContent=direction==="jp"?current.answer.en:current.answer.jp;
-    $("promptSub").textContent=direction==="jp"?t("What does this mean?","どんな意味かな？"):current.answer.kana;
+    localizedText("promptSub", () => direction==="jp"?t("What does this mean?","どんな意味かな？"):current.answer.kana);
     [...$("answers").children].forEach((btn,i)=>{
       const w=current.options[i];
       btn.disabled=false;btn.className="answer";
       btn.style.color="#30201f";btn.innerHTML=direction==="jp"?`${w.jp}<span class="reading">${w.kana}</span>`:w.en;
     });
-    $("feedback").textContent="";
-    $("level").textContent=`${t("LEVEL","レベル")} ${levelFor(score)+1} · ${levelName(score)}`;
+    localizedText("feedback", () => "");
+    localizedText("level", () => `${t("LEVEL","レベル")} ${levelFor(score)+1} · ${levelName(score)}`);
   }
   function startGame(){
     clearInterval(timerId);runToken++;score=0;recent=[];locked=false;best=readBest();
     $("home").classList.add("hidden");$("game").classList.remove("hidden");$("gameOver").classList.add("hidden");
-    $("score").textContent="0";$("best").textContent=best;$("rightStatLabel").textContent=`${t("Best","ベスト")} · ${mode==="endless"?t("Endless","エンドレス"):t("60 sec","60秒")}`;
+    $("score").textContent="0";$("best").textContent=best;localizedText("rightStatLabel", () => `${t("Best","ベスト")} · ${mode==="endless"?t("Endless","エンドレス"):t("60 sec","60秒")}`);
     $("timerWrap").classList.toggle("hidden",mode!=="timed");
     renderQuestion();
     if(mode==="timed"){startedAt=Date.now();updateTimer();const token=runToken;timerId=setInterval(()=>{if(token!==runToken)return;updateTimer()},100)}
@@ -237,12 +272,13 @@ button{font:inherit;cursor:pointer;border:0}
     if(locked||!current)return;locked=true;
     const btns=[...$("answers").children];btns.forEach(b=>b.disabled=true);
     if(index===current.correct){
-      score++;$("score").textContent=score;$("feedback").textContent=[t("NICE! ✨","正解！ ✨"),t("GREAT! ⚡","いいね！ ⚡"),t("KEEP GOING! 🔥","その調子！ 🔥"),t("PERFECT! 🌟","ばっちり！ 🌟")][Math.floor(Math.random()*4)];
+      score++;$("score").textContent=score;const praise = Math.floor(Math.random()*4);
+      localizedText("feedback", () => [t("NICE! ✨","正解！ ✨"),t("GREAT! ⚡","いいね！ ⚡"),t("KEEP GOING! 🔥","その調子！ 🔥"),t("PERFECT! 🌟","ばっちり！ 🌟")][praise]);
       btns[index].classList.add("correct");beep(760,.08);
-      if(score===5||score===10||score===20||score===30)toast(t(`🔥 ${score} IN A ROW!`, `🔥 ${score}問連続正解！`));
+      if(score===5||score===10||score===20||score===30){ const streak = score; toast(() => t(`🔥 ${streak} IN A ROW!`, `🔥 ${streak}問連続正解！`)); }
       setTimeout(()=>{if($("game").classList.contains("hidden"))return;renderQuestion()},330);
     }else{
-      btns[index].classList.add("wrong");btns[current.correct].classList.add("correct");$("feedback").textContent=t("OOPS! ONE MISTAKE = GAME OVER","残念！一問間違えると終了");beep(170,.18,"sawtooth");
+      btns[index].classList.add("wrong");btns[current.correct].classList.add("correct");localizedText("feedback", () => t("OOPS! ONE MISTAKE = GAME OVER","残念！一問間違えると終了"));beep(170,.18,"sawtooth");
       setTimeout(()=>endGame("wrong"),450);
     }
   }
@@ -250,19 +286,28 @@ button{font:inherit;cursor:pointer;border:0}
     clearInterval(timerId);runToken++;best=Math.max(best,score);saveBest(best);
     $("best").textContent=best;$("gameOver").classList.remove("hidden");
     $("overEmoji").textContent=reason==="time"?"⏱️":"💥";
-    $("overTitle").textContent=reason==="time"?t("Time's up!","時間切れ！"):t("Game over!","ゲーム終了！");
-    $("overMessage").textContent=reason==="time"?t("60 seconds. How did you do?","60秒で何問正解できたかな？"):t("One slip. Shake it off and go again.","気を取り直して、もう一度！");
-    $("finalScore").textContent=score;$("bestLine").textContent=`${t("Personal best","自己ベスト")} · ${best}`;
+    localizedText("overTitle", () => reason==="time"?t("Time's up!","時間切れ！"):t("Game over!","ゲーム終了！"));
+    localizedText("overMessage", () => reason==="time"?t("60 seconds. How did you do?","60秒で何問正解できたかな？"):t("One slip. Shake it off and go again.","気を取り直して、もう一度！"));
+    $("finalScore").textContent=score;localizedText("bestLine", () => `${t("Personal best","自己ベスト")} · ${best}`);
     beep(reason==="time"?480:240,.12);
   }
-  function toast(msg){$("toast").textContent=msg;$("toast").classList.add("show");setTimeout(()=>$("toast").classList.remove("show"),1300)}
+  function toast(render){localizedText("toast", render);$("toast").classList.add("show");setTimeout(()=>$("toast").classList.remove("show"),1300)}
   $("playBtn").addEventListener("click",startGame);
   $("againBtn").addEventListener("click",startGame);
   $("homeBtn").addEventListener("click",()=>{$("gameOver").classList.add("hidden");$("game").classList.add("hidden");$("home").classList.remove("hidden");clearInterval(timerId);runToken++});
   $("quitBtn").addEventListener("click",()=>{$("game").classList.add("hidden");$("home").classList.remove("hidden");clearInterval(timerId);runToken++});
   $("answers").addEventListener("click",e=>{const b=e.target.closest("[data-index]");if(b)answer(Number(b.dataset.index))});
   document.addEventListener("keydown",e=>{if(!$("game").classList.contains("hidden")&&!$("gameOver").classList.contains("hidden")===false){if(e.key==="1")answer(0);if(e.key==="2")answer(1)}});
+  languageButtons.forEach(button => button.addEventListener("click", () => {
+    const language = button.dataset.language;
+    if (language === document.documentElement.lang) return;
+    const url = new URL(location.href);
+    url.searchParams.set("lang", language);
+    history.replaceState(history.state, "", url);
+    setLanguage(language);
+  }));
+  setLanguage(t("en", "ja"));
 })();
 </script>
-<p style="text-align:center;padding:1rem"><a style="color:inherit" href="index.html">← Hanae, let’s talk / ホーム</a></p></body>
+<footer class="site-return"><a href="index.html">← Hanae, let’s talk / ホーム</a></footer></body>
 </html>
