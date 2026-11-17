@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="ja">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -80,6 +80,7 @@ button{font:inherit;cursor:pointer;border:0}
 </style>
 </head>
 <body>
+<nav aria-label="表示言語 / Display language" style="display:flex;justify-content:center;gap:.5rem;padding:.5rem"><a class="sound" href="?lang=ja" lang="ja">日本語</a><a class="sound" href="?lang=en" lang="en">English</a></nav>
 <div class="toast" id="toast"></div>
 <main class="shell">
   <div class="topline">
@@ -89,28 +90,28 @@ button{font:inherit;cursor:pointer;border:0}
   <section class="panel">
     <div class="screen" id="home">
       <div class="brand">
-        <div class="brand-kicker">Quick brain. Quick fingers.</div>
+        <div class="brand-kicker"><span data-ja="ひらめいたら、すぐタップ！">Quick brain. Quick fingers.</span></div>
         <h1>MOJI<span>MO</span></h1>
         <div class="brand-jp">モ ジ モ</div>
-        <div class="tagline">Learn fast. Play fast. Beat your best.</div>
+        <div class="tagline"><span data-ja="単語を覚えて、自己ベストを更新しよう。">Learn fast. Play fast. Beat your best.</span></div>
       </div>
-      <div class="section-label">Choose your language</div>
+      <div class="section-label"><span data-ja="学習する言語を選ぶ">Choose your language</span></div>
       <div class="segment" id="directionChoices">
-        <button class="choice active" data-direction="jp">Learn Japanese<small>English → 日本語</small></button>
-        <button class="choice" data-direction="en">Learn English<small>日本語 → English</small></button>
+        <button class="choice active" data-direction="jp"><span data-ja="日本語を学ぶ">Learn Japanese</span><small>English → 日本語</small></button>
+        <button class="choice" data-direction="en"><span data-ja="英語を学ぶ">Learn English</span><small>日本語 → English</small></button>
       </div>
-      <div class="section-label">Choose your mode</div>
+      <div class="section-label"><span data-ja="モードを選ぶ">Choose your mode</span></div>
       <div class="segment" id="modeChoices">
-        <button class="choice active" data-mode="endless">Endless<small>One mistake ends it</small></button>
-        <button class="choice" data-mode="timed">60 seconds<small>Go for your best score</small></button>
+        <button class="choice active" data-mode="endless"><span data-ja="エンドレス">Endless</span><small><span data-ja="一問間違えると終了">One mistake ends it</span></small></button>
+        <button class="choice" data-mode="timed"><span data-ja="60秒">60 seconds</span><small><span data-ja="自己ベストに挑戦">Go for your best score</span></small></button>
       </div>
-      <button class="start" id="playBtn">PLAY NOW <span>→</span></button>
-      <p class="hint">Two choices. One chance. How far can you go?</p>
+      <button class="start" id="playBtn"><span data-ja="スタート ">PLAY NOW </span><span>→</span></button>
+      <p class="hint"><span data-ja="二択クイズ。何問連続で正解できる？">Two choices. One chance. How far can you go?</span></p>
     </div>
 
     <div class="screen hidden" id="game">
       <div class="stats">
-        <div class="stat"><div class="stat-label">Score</div><div class="stat-value" id="score">0</div></div>
+        <div class="stat"><div class="stat-label"><span data-ja="スコア">Score</span></div><div class="stat-value" id="score">0</div></div>
         <div class="stat"><div class="stat-label" id="rightStatLabel">Best · Endless</div><div class="stat-value" id="best">0</div></div>
       </div>
       <div class="progress-wrap hidden" id="timerWrap"><div class="progress" id="timerBar"></div></div>
@@ -124,7 +125,7 @@ button{font:inherit;cursor:pointer;border:0}
         <button class="answer" data-index="1"></button>
       </div>
       <div class="feedback" id="feedback" aria-live="polite"></div>
-      <div class="footer-row"><span id="level">LEVEL 1 · STARTER</span><button class="quit" id="quitBtn">← Exit</button></div>
+      <div class="footer-row"><span id="level">LEVEL 1 · STARTER</span><button class="quit" id="quitBtn"><span data-ja="← やめる">← Exit</span></button></div>
     </div>
     <div class="overlay hidden" id="gameOver">
       <div class="modal">
@@ -133,8 +134,8 @@ button{font:inherit;cursor:pointer;border:0}
         <p id="overMessage">One slip. Run it back.</p>
         <div class="final-score" id="finalScore">0</div>
         <div class="bestline" id="bestLine">Personal best · 0</div>
-        <button class="start" id="againBtn">PLAY AGAIN ↻</button>
-        <button class="secondary" id="homeBtn">Back to menu</button>
+        <button class="start" id="againBtn"><span data-ja="もう一度 ↻">PLAY AGAIN ↻</span></button>
+        <button class="secondary" id="homeBtn"><span data-ja="メニューに戻る">Back to menu</span></button>
       </div>
     </div>
   </section>
@@ -142,6 +143,11 @@ button{font:inherit;cursor:pointer;border:0}
 <script>
 (() => {
   "use strict";
+  const japanese = new URLSearchParams(location.search).get("lang") !== "en";
+  const t = (en, ja) => japanese ? ja : en;
+  document.documentElement.lang = t("en", "ja");
+  document.querySelector('nav a[lang="' + document.documentElement.lang + '"]').setAttribute("aria-current", "true");
+  if (japanese) document.querySelectorAll("[data-ja]").forEach(element => { element.textContent = element.dataset.ja; });
   const words = [
     {en:"water",jp:"水",kana:"みず",level:0},{en:"cat",jp:"猫",kana:"ねこ",level:0},
     {en:"dog",jp:"犬",kana:"いぬ",level:0},{en:"book",jp:"本",kana:"ほん",level:0},
@@ -176,6 +182,8 @@ button{font:inherit;cursor:pointer;border:0}
   const bestKey = () => `${BEST_KEY}_${direction}_${mode}`;
   const readBest = () => { try{return Number(localStorage.getItem(bestKey())||0)}catch(e){return 0} };
   const saveBest = value => { try{localStorage.setItem(bestKey(),String(value))}catch(e){} };
+  $("soundBtn").textContent = t("♫ SOUND ON", "♫ サウンドオン");
+  $("soundBtn").setAttribute("aria-label", t("Toggle sound", "サウンドの切り替え"));
   function beep(freq=600,duration=.07,type="sine"){
     if(!sound)return;
     try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return;const c=new C(),o=c.createOscillator(),g=c.createGain();o.type=type;o.frequency.value=freq;g.gain.setValueAtTime(.045,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+duration);o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+duration);o.onended=()=>c.close()}catch(e){}
@@ -183,9 +191,9 @@ button{font:inherit;cursor:pointer;border:0}
   function setChoice(group, attr, value){document.querySelectorAll(`#${group} .choice`).forEach(b=>b.classList.toggle("active",b.dataset[attr]===value))}
   $("directionChoices").addEventListener("click",e=>{const b=e.target.closest("[data-direction]");if(!b)return;direction=b.dataset.direction;setChoice("directionChoices","direction",direction)});
   $("modeChoices").addEventListener("click",e=>{const b=e.target.closest("[data-mode]");if(!b)return;mode=b.dataset.mode;setChoice("modeChoices","mode",mode)});
-  $("soundBtn").addEventListener("click",()=>{sound=!sound;$("soundBtn").textContent=sound?"♫ SOUND ON":"♫ SOUND OFF";if(sound)beep()});
+  $("soundBtn").addEventListener("click",()=>{sound=!sound;$("soundBtn").textContent=sound?t("♫ SOUND ON","♫ サウンドオン"):t("♫ SOUND OFF","♫ サウンドオフ");if(sound)beep()});
   function levelFor(n){return n<6?0:n<11?1:n<21?2:3}
-  function levelName(n){return ["STARTER","EVERYDAY","INTERMEDIATE","CHALLENGE"][levelFor(n)]}
+  function levelName(n){return [t("STARTER","入門"),t("EVERYDAY","日常"),t("INTERMEDIATE","中級"),t("CHALLENGE","チャレンジ")][levelFor(n)]}
   function pickQuestion(){
     const band=levelFor(score);
     let pool=words.filter(w=>w.level<=band);
@@ -201,21 +209,21 @@ button{font:inherit;cursor:pointer;border:0}
   }
   function renderQuestion(){
     current=pickQuestion();locked=false;
-    $("promptLabel").textContent=direction==="jp"?"CHOOSE THE JAPANESE":"CHOOSE THE ENGLISH";
+    $("promptLabel").textContent=direction==="jp"?t("CHOOSE THE JAPANESE","日本語を選んでね"):t("CHOOSE THE ENGLISH","英語を選んでね");
     $("prompt").textContent=direction==="jp"?current.answer.en:current.answer.jp;
-    $("promptSub").textContent=direction==="jp"?"What does this mean?":current.answer.kana;
+    $("promptSub").textContent=direction==="jp"?t("What does this mean?","どんな意味かな？"):current.answer.kana;
     [...$("answers").children].forEach((btn,i)=>{
       const w=current.options[i];
       btn.disabled=false;btn.className="answer";
       btn.style.color="#30201f";btn.innerHTML=direction==="jp"?`${w.jp}<span class="reading">${w.kana}</span>`:w.en;
     });
     $("feedback").textContent="";
-    $("level").textContent=`LEVEL ${levelFor(score)+1} · ${levelName(score)}`;
+    $("level").textContent=`${t("LEVEL","レベル")} ${levelFor(score)+1} · ${levelName(score)}`;
   }
   function startGame(){
     clearInterval(timerId);runToken++;score=0;recent=[];locked=false;best=readBest();
     $("home").classList.add("hidden");$("game").classList.remove("hidden");$("gameOver").classList.add("hidden");
-    $("score").textContent="0";$("best").textContent=best;$("rightStatLabel").textContent=`Best · ${mode==="endless"?"Endless":"60 sec"}`;
+    $("score").textContent="0";$("best").textContent=best;$("rightStatLabel").textContent=`${t("Best","ベスト")} · ${mode==="endless"?t("Endless","エンドレス"):t("60 sec","60秒")}`;
     $("timerWrap").classList.toggle("hidden",mode!=="timed");
     renderQuestion();
     if(mode==="timed"){startedAt=Date.now();updateTimer();const token=runToken;timerId=setInterval(()=>{if(token!==runToken)return;updateTimer()},100)}
@@ -229,12 +237,12 @@ button{font:inherit;cursor:pointer;border:0}
     if(locked||!current)return;locked=true;
     const btns=[...$("answers").children];btns.forEach(b=>b.disabled=true);
     if(index===current.correct){
-      score++;$("score").textContent=score;$("feedback").textContent=["NICE! ✨","GREAT! ⚡","KEEP GOING! 🔥","PERFECT! 🌟"][Math.floor(Math.random()*4)];
+      score++;$("score").textContent=score;$("feedback").textContent=[t("NICE! ✨","正解！ ✨"),t("GREAT! ⚡","いいね！ ⚡"),t("KEEP GOING! 🔥","その調子！ 🔥"),t("PERFECT! 🌟","ばっちり！ 🌟")][Math.floor(Math.random()*4)];
       btns[index].classList.add("correct");beep(760,.08);
-      if(score===5||score===10||score===20||score===30)toast(`🔥 ${score} IN A ROW!`);
+      if(score===5||score===10||score===20||score===30)toast(t(`🔥 ${score} IN A ROW!`, `🔥 ${score}問連続正解！`));
       setTimeout(()=>{if($("game").classList.contains("hidden"))return;renderQuestion()},330);
     }else{
-      btns[index].classList.add("wrong");btns[current.correct].classList.add("correct");$("feedback").textContent="OOPS! ONE MISTAKE = GAME OVER";beep(170,.18,"sawtooth");
+      btns[index].classList.add("wrong");btns[current.correct].classList.add("correct");$("feedback").textContent=t("OOPS! ONE MISTAKE = GAME OVER","残念！一問間違えると終了");beep(170,.18,"sawtooth");
       setTimeout(()=>endGame("wrong"),450);
     }
   }
@@ -242,9 +250,9 @@ button{font:inherit;cursor:pointer;border:0}
     clearInterval(timerId);runToken++;best=Math.max(best,score);saveBest(best);
     $("best").textContent=best;$("gameOver").classList.remove("hidden");
     $("overEmoji").textContent=reason==="time"?"⏱️":"💥";
-    $("overTitle").textContent=reason==="time"?"Time's up!":"Game over!";
-    $("overMessage").textContent=reason==="time"?"60 seconds. How did you do?":"One slip. Shake it off and go again.";
-    $("finalScore").textContent=score;$("bestLine").textContent=`Personal best · ${best}`;
+    $("overTitle").textContent=reason==="time"?t("Time's up!","時間切れ！"):t("Game over!","ゲーム終了！");
+    $("overMessage").textContent=reason==="time"?t("60 seconds. How did you do?","60秒で何問正解できたかな？"):t("One slip. Shake it off and go again.","気を取り直して、もう一度！");
+    $("finalScore").textContent=score;$("bestLine").textContent=`${t("Personal best","自己ベスト")} · ${best}`;
     beep(reason==="time"?480:240,.12);
   }
   function toast(msg){$("toast").textContent=msg;$("toast").classList.add("show");setTimeout(()=>$("toast").classList.remove("show"),1300)}
